@@ -1,0 +1,31 @@
+{{ user }}:
+  group:
+    - present
+    - gid: {{ gid }}
+    - system: True
+  user:
+    - present
+    - shell: /bin/bash
+    - home: /home/{{ user }}
+    - uid: {{ uid }}
+    - groups:
+      - apixio
+      - wheel
+      - {{ user }}
+    - require:
+      - group: {{ user }}
+/home/{{ user }}/.ssh:
+  file.directory:
+    - user: {{ user }}
+    - group: {{ user }}
+    - mode: 0700
+    - makedirs: True
+    - require:
+      - user: {{ user }}
+/home/{{ user }}/.ssh/authorized_keys:
+  file.managed:
+    - source: salt://keys/user/{{ user }}.pub
+    - user: {{ user }}
+    - group: {{ user }}
+    - require:
+      - user: {{ user }}

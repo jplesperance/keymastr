@@ -1,0 +1,12 @@
+---
+# Generated SSH keys will be saved here.
+ssh_home: ~/.ssh
+
+# Directory where root keys are stored
+root_keys: /srv/salt/keys/system
+
+# Directory where admin and engineering key and ssh files are stored
+user_keys: /srv/salt/keys/user
+
+# Files containing list of admin users and engineers
+

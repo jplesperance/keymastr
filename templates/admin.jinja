@@ -1,0 +1,42 @@
+{% for key,items in admins.items() %}
+{{ items.user }}:
+  group:
+    - present
+    - gid: {{ items.gid }}
+    - system: True
+  user:
+    - present
+    - shell: /bin/bash
+    - home: /home/{{ items.user }}
+    - uid: {{ items.uid }}
+    - groups:
+      - apixio
+      - wheel
+      - {{ items.user }}
+    - require:
+      - group: {{ items.user }}
+/home/{{ items.user }}/.ssh:
+  file.directory:
+    - user: {{ items.user }}
+    - group: {{ items.user }}
+    - mode: 0700
+    - makedirs: True
+    - require:
+      - user: {{ items.user }}
+/home/{{ items.user }}/.ssh/authorized_keys:
+  file.managed:
+    - source: salt://keys/user/{{ items.user }}.pub
+    - user: {{ items.user }}
+    - group: {{ items.user }}
+    - require:
+      - user: {{ items.user }}
+
+{% endfor %}
+{% for user in engineers %}
+{{ user }}:
+  user:
+    - absent
+  group:
+    - absent
+
+{% endfor %}
